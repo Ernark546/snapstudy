@@ -3,7 +3,7 @@
 A modern, responsive web application for calculating adjusted video playback durations with smart speed recommendations for different content types.
 
 ![SnapStudy Preview](https://img.shields.io/badge/Version-1.0.0-blue.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.3-purple.svg)
 ![jQuery](https://img.shields.io/badge/jQuery-3.7.1-yellow.svg)
 
