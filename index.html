@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>SnapStudy - Video Duration Calculator</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+    <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #8b5cf6;
+      --accent: #06b6d4;
+      --color-bg: #f8fafc;
+      --color-surface: rgba(255,255,255,.82);
+      --color-surface-alt: rgba(255,255,255,.55);
+      --color-text: #1e293b;
+      --color-text-muted: #64748b;
+      --color-border: rgba(0,0,0,.12);
+      --color-glass: rgba(255,255,255,.30);
+      --gradient-accent: linear-gradient(135deg,var(--primary) 0%,var(--secondary) 50%,var(--accent) 100%);
+      --shadow-lift: 0 25px 50px -12px rgba(0,0,0,.25);
+      --shadow-btn: 0 10px 25px -5px rgba(99,102,241,.4);
+      --transition-slow: .6s cubic-bezier(.4,0,.2,1);
+      --transition-fast: .3s cubic-bezier(.4,0,.2,1);
+    }
+
+    html[data-theme="dark"] {
+      --color-bg: #0f172a;
+      --color-surface: rgba(15,23,42,.82);
+      --color-surface-alt: rgba(30,41,59,.55);
+      --color-text: #f1f5f9;
+      --color-text-muted: #94a3b8;
+      --color-border: rgba(255,255,255,.14);
+      --color-glass: rgba(15,23,42,.35);
+      --shadow-lift: 0 25px 50px -12px rgba(0,0,0,.55);
+      --shadow-btn: 0 10px 25px -5px rgba(99,102,241,.55);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                  color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Time-themed Background Animations */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+      animation: timeFlow 20s ease-in-out infinite alternate;
+      z-index: -2;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 100px,
+          rgba(99, 102, 241, 0.02) 100px,
+          rgba(99, 102, 241, 0.02) 102px
+        );
+      animation: timeLines 30s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes timeFlow {
+      0% {
+        transform: translateX(-10px) translateY(-10px) scale(1);
+        filter: hue-rotate(0deg);
+      }
+      25% {
+        transform: translateX(10px) translateY(-5px) scale(1.02);
+        filter: hue-rotate(90deg);
+      }
+      50% {
+        transform: translateX(-5px) translateY(10px) scale(0.98);
+        filter: hue-rotate(180deg);
+      }
+      75% {
+        transform: translateX(15px) translateY(-8px) scale(1.01);
+        filter: hue-rotate(270deg);
+      }
+      100% {
+        transform: translateX(-8px) translateY(5px) scale(1);
+        filter: hue-rotate(360deg);
+      }
+    }
+
+    @keyframes timeLines {
+      0% {
+        transform: translateX(-100px) rotate(0deg);
+        opacity: 0.3;
+      }
+      50% {
+        opacity: 0.1;
+      }
+      100% {
+        transform: translateX(100px) rotate(1deg);
+        opacity: 0.3;
+      }
+    }
+
+    /* Floating time particles */
+    .time-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .time-particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: floatParticle 15s linear infinite;
+    }
+
+    .time-particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+    .time-particle:nth-child(2) { left: 20%; animation-delay: -2s; }
+    .time-particle:nth-child(3) { left: 30%; animation-delay: -4s; }
+    .time-particle:nth-child(4) { left: 40%; animation-delay: -6s; }
+    .time-particle:nth-child(5) { left: 50%; animation-delay: -8s; }
+    .time-particle:nth-child(6) { left: 60%; animation-delay: -10s; }
+    .time-particle:nth-child(7) { left: 70%; animation-delay: -12s; }
+    .time-particle:nth-child(8) { left: 80%; animation-delay: -14s; }
+    .time-particle:nth-child(9) { left: 90%; animation-delay: -16s; }
+
+    @keyframes floatParticle {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+        transform: translateY(90vh) scale(1);
+      }
+      90% {
+        opacity: 0.6;
+        transform: translateY(-10vh) scale(1);
+      }
+      100% {
+        transform: translateY(-20vh) scale(0);
+        opacity: 0;
+      }
+    }
+
+    /* Clock-like rotating elements */
+    .time-clock-bg {
+      position: fixed;
+      top: 10%;
+      right: 5%;
+      width: 200px;
+      height: 200px;
+      border: 2px solid rgba(99, 102, 241, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+      animation: clockRotate 60s linear infinite;
+    }
+
+    .time-clock-bg::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 60px;
+      background: rgba(99, 102, 241, 0.2);
+      transform-origin: bottom;
+      transform: translate(-50%, -100%) rotate(0deg);
+      animation: clockHand 12s linear infinite;
+    }
+
+    .time-clock-bg::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1px;
+      height: 40px;
+      background: rgba(139, 92, 246, 0.3);
+      transform-origin: bottom;
+      transform: translate(-50%, -100%) rotate(0deg);
+      animation: clockHand 1s linear infinite;
+    }
+
+    @keyframes clockRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes clockHand {
+      from { transform: translate(-50%, -100%) rotate(0deg); }
+      to { transform: translate(-50%, -100%) rotate(360deg); }
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-fixed {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border: 2px solid var(--color-border);
+      border-radius: 50%;
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-size: 24px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      box-shadow: var(--shadow-btn);
+    }
+
+    .theme-toggle-fixed:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.25);
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Container */
+    .container-fluid {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Cards */
+    .calculator-card, .details-card {
+      padding: 2.5rem;
+      background: var(--color-surface);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-lift);
+      height: fit-content;
+      position: relative;
+      animation: cardPulse 4s ease-in-out infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes cardPulse {
+      0%, 100% { 
+        box-shadow: var(--shadow-lift);
+        transform: translateY(0px);
+      }
+      50% { 
+        box-shadow: var(--shadow-lift), 0 0 30px rgba(99, 102, 241, 0.15);
+        transform: translateY(-2px);
+      }
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+    }
+
+    .title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      animation: titlePulse 3s ease-in-out infinite;
+    }
+
+    @keyframes titlePulse {
+      0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+      }
+      50% {
+        transform: scale(1.02);
+        filter: brightness(1.1);
+      }
+    }
+
+    .subtitle {
+      color: var(--color-text-muted);
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* Time Inputs */
+    .time-input-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .section-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .time-inputs {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .time-field {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .time-input {
+      width: 80px;
+      height: 80px;
+      border: 2px solid var(--color-border);
+      border-radius: 15px;
+      background: var(--color-surface-alt);
+      color: var(--color-text);
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      transition: all var(--transition-fast);
+      font-family: 'JetBrains Mono', monospace;
+      -webkit-appearance: none;
+      -moz-appearance: textfield;
+      appearance: none;
+    }
+
+    /* Remove number input spinners */
+    .time-input::-webkit-outer-spin-button,
+    .time-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Remove any pseudo-elements that might show icons */
+    .time-input::before,
+    .time-input::after {
+      display: none !important;
+    }
+
+    .time-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      transform: scale(1.02);
+    }
+
+    .field-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.5rem;
+    }
+
+    .time-separator {
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--color-text-muted);
+      margin: 0 0.5rem;
+    }
+
+    /* Speed Selection */
+    .speed-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .speed-select {
+      background: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: var(--color-text);
+      font-size: 16px;
+      transition: all var(--transition-fast);
+      width: 100%;
+    }
+
+    .speed-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      outline: none;
+    }
+
+    /* Result Display */
+    .result-section {
+      margin-bottom: 2rem;
+    }
+
+    .result-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .result-time {
+      font-size: 3rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      text-align: center;
+      color: var(--primary);
+      text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+      transition: all var(--transition-fast);
+      animation: timeTick 2s ease-in-out infinite;
+      position: relative;
+    }
+
+    .result-time.calculating {
+      animation: timeUrgency 1s ease-in-out infinite;
+    }
+
+    @keyframes timeTick {
+      0%, 100% { 
+        transform: scale(1);
+        text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+      }
+      50% { 
+        transform: scale(1.02);
+        text-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
+      }
+    }
+
+    @keyframes timeUrgency {
+      0%, 100% { 
+        transform: scale(1);
+        color: var(--primary);
+      }
+      50% { 
+        transform: scale(1.05);
+        color: var(--accent);
+        text-shadow: 0 0 30px rgba(6, 182, 212, 0.6);
+      }
+    }
+
+    .result-info {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      font-weight: 500;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    .time-saving-info {
+      text-align: center;
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    .saved-time {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      animation: timeSavedPulse 2s ease-in-out infinite;
+    }
+
+    .motivation-msg {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+      background: rgba(6, 182, 212, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 15px;
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      animation: motivationGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes timeSavedPulse {
+      0%, 100% {
+        transform: scale(1);
+        color: var(--accent);
+      }
+      50% {
+        transform: scale(1.02);
+        color: var(--primary);
+      }
+    }
+
+    @keyframes motivationGlow {
+      0%, 100% {
+        box-shadow: 0 0 5px rgba(6, 182, 212, 0.2);
+        background: rgba(6, 182, 212, 0.1);
+      }
+      50% {
+        box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+        background: rgba(6, 182, 212, 0.15);
+      }
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .btn {
+      padding: 0.75rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary {
+      background: var(--color-surface);
+      color: var(--color-text);
+      border: 2px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+      border-color: var(--primary);
+    }
+
+    /* Details Card Styles */
+    .analysis-summary, .category-section {
+      padding: 1.5rem;
+      background: var(--color-surface-alt);
+      border-radius: 15px;
+      border: 1px solid var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+
+    .category-select {
+      background: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: var(--color-text);
+      font-size: 16px;
+      transition: all var(--transition-fast);
+    }
+
+    .speed-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .speed-card {
+      padding: 1rem;
+      background: var(--color-surface-alt);
+      border-radius: 10px;
+      border: 1px solid var(--color-border);
+      text-align: center;
+      transition: all var(--transition-fast);
+    }
+
+    .speed-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Recommendation Styles */
+    .recommendation-card {
+      padding: 1.5rem;
+      background: var(--color-surface-alt);
+      border-radius: 15px;
+      border: 1px solid var(--color-border);
+      animation: slideInRecommendation 0.5s ease-out;
+    }
+
+    .category-header h4 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .recommendation-tip {
+      background: rgba(99, 102, 241, 0.1);
+      padding: 1rem;
+      border-radius: 10px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .speed-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .speed-badges .badge {
+      font-size: 0.9rem !important;
+      animation: badgePulse 2s ease-in-out infinite;
+    }
+
+    .time-value-message .alert {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      color: var(--color-text);
+      animation: messageGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes slideInRecommendation {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes badgePulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(99, 102, 241, 0.4);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+      }
+    }
+
+    @keyframes messageGlow {
+      0%, 100% {
+        box-shadow: 0 0 5px rgba(99, 102, 241, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+      .container-fluid {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+      }
+      
+      .calculator-card, .details-card {
+        padding: 1.5rem;
+      }
+      
+      .time-inputs {
+        gap: 0.5rem;
+      }
+      
+      .time-input {
+        width: 60px;
+        height: 60px;
+        font-size: 1.2rem;
+      }
+      
+      .speed-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .title {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .container-fluid {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+      
+      .calculator-card, .details-card {
+        padding: 1.25rem;
+      }
+    }
+  </style>
+</head>
+</head>
+<body>
+  <!-- Animated Background Elements -->
+  <div class="time-particles">
+    <div class="time-particle"></div>
+    <div class="time-particle"></div>
+    <div class="time-particle"></div>
+    <div class="time-particle"></div>
+    <div class="time-particle"></div>
+    <div class="time-particle"></div>
+    <div class="time-particle"></div>
+    <div class="time-particle"></div>
+    <div class="time-particle"></div>
+  </div>
+  <div class="time-clock-bg"></div>
+
+  <!-- Theme Toggle Button -->
+  <button id="themeToggle" class="theme-toggle-fixed" aria-label="Switch to light theme">☀️</button>
+
+  <div class="container-fluid px-3 py-4">
+    <div class="row justify-content-center">
+      <!-- Form Card (Left Column) -->
+      <div class="col-lg-4 col-md-6 col-12 mb-4">
+        <div class="calculator-card">
+          <div class="card-header">
+            <h1 class="title">SnapStudy</h1>
+            <p class="subtitle">Master Your Time • Every Second Counts</p>
+          </div>
+          
+          <!-- Time Input Section -->
+          <div class="time-input-section">
+            <div class="section-label">Original Duration</div>
+            <div class="time-inputs">
+              <div class="time-field">
+                <input id="hours" class="time-input" type="number" min="0" value="0" aria-label="Hours">
+                <div class="field-label">Hours</div>
+              </div>
+              <div class="time-separator">:</div>
+              <div class="time-field">
+                <input id="minutes" class="time-input" type="number" min="0" max="59" value="0" aria-label="Minutes">
+                <div class="field-label">Minutes</div>
+              </div>
+              <div class="time-separator">:</div>
+              <div class="time-field">
+                <input id="seconds" class="time-input" type="number" min="0" max="59" value="0" aria-label="Seconds">
+                <div class="field-label">Seconds</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Speed Selection -->
+          <div class="speed-section">
+            <div class="section-label">Playback Speed</div>
+            <select id="speed" class="speed-select" aria-label="Playback Speed"></select>
+          </div>
+
+          <!-- Result Display -->
+          <div class="result-section">
+            <div class="result-label">Adjusted Duration</div>
+            <div id="result" class="result-time">--:--:--</div>
+            <div id="realTime" class="result-info d-none"></div>
+          </div>
+
+          <!-- Controls -->
+          <div class="controls">
+            <button id="resetBtn" class="btn btn-secondary">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Details Card (Right Column) -->
+      <div class="col-lg-7 col-md-10 col-12 mb-4">
+        <div class="details-card d-none" id="detailsCard">
+          <div class="analysis-summary mb-4">
+            <h3>Speed Analysis Summary</h3>
+            <div id="speedSummary" class="speed-summary-content"></div>
+          </div>
+          
+          <div class="category-section">
+            <h3>Video Category Performance</h3>
+            <div class="category-selector mb-4">
+              <label for="videoCategory" class="form-label">Select your video category:</label>
+              <select id="videoCategory" class="form-select category-select">
+                <option value="">Choose a category...</option>
+                <option value="educational">Educational / Lecture Videos</option>
+                <option value="tutorial">How-to / Procedural Tutorials</option>
+                <option value="documentary">Documentary</option>
+                <option value="comedy">Comedy / Stand-up</option>
+                <option value="news">News & Narration</option>
+                <option value="music">Music Videos / Performances</option>
+                <option value="sports">Sports Highlights</option>
+                <option value="movies">Movies / TV Dramas</option>
+                <option value="kids">Children's Content</option>
+                <option value="language">Language Learning</option>
+                <option value="podcast">Podcasts / Interviews</option>
+                <option value="asmr">ASMR / Meditation</option>
+              </select>
+            </div>
+            
+            <div id="categoryDetails" class="category-details"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Layout -->
+    <div class="d-lg-none">
+      <div class="details-card d-none" id="detailsCardMobile">
+        <div class="accordion" id="mobileDetailsAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="detailsHeading">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#detailsCollapse" aria-expanded="false" aria-controls="detailsCollapse">
+                Details
+              </button>
+            </h2>
+            <div id="detailsCollapse" class="accordion-collapse collapse" aria-labelledby="detailsHeading" data-bs-parent="#mobileDetailsAccordion">
+              <div class="accordion-body">
+                <div class="analysis-summary mb-4">
+                  <h4>Speed Analysis Summary</h4>
+                  <div id="speedSummaryMobile" class="speed-summary-content"></div>
+                </div>
+                
+                <div class="category-section">
+                  <h4>Video Category Performance</h4>
+                  <div class="category-selector mb-4">
+                    <label for="videoCategoryMobile" class="form-label">Select your video category:</label>
+                    <select id="videoCategoryMobile" class="form-select category-select">
+                      <option value="">Choose a category...</option>
+                      <option value="educational">Educational / Lecture Videos</option>
+                      <option value="tutorial">How-to / Procedural Tutorials</option>
+                      <option value="documentary">Documentary</option>
+                      <option value="comedy">Comedy / Stand-up</option>
+                      <option value="news">News & Narration</option>
+                      <option value="music">Music Videos / Performances</option>
+                      <option value="sports">Sports Highlights</option>
+                      <option value="movies">Movies / TV Dramas</option>
+                      <option value="kids">Children's Content</option>
+                      <option value="language">Language Learning</option>
+                      <option value="podcast">Podcasts / Interviews</option>
+                      <option value="asmr">ASMR / Meditation</option>
+                    </select>
+                  </div>
+                  
+                  <div id="categoryDetailsMobile" class="category-details"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  
+  <script>
+    $(document).ready(function() {
+      const $hours = $('#hours');
+      const $minutes = $('#minutes');
+      const $seconds = $('#seconds');
+      const $speed = $('#speed');
+      const $result = $('#result');
+      const $realTime = $('#realTime');
+      const $reset = $('#resetBtn');
+      const $themeToggle = $('#themeToggle');
+
+      // Theme Management - Default to dark theme
+      let currentTheme = localStorage.getItem('snapstudy_theme') || 'dark';
+      
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        const isLight = theme === 'light';
+        $themeToggle
+          .text(isLight ? '🌙' : '☀️')
+          .attr('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode')
+          .toggleClass('light-mode', isLight);
+        currentTheme = theme;
+      }
+      
+      function toggleTheme() {
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+        localStorage.setItem('snapstudy_theme', newTheme);
+        
+        // Add toggle animation
+        $themeToggle.addClass('toggling');
+        setTimeout(() => $themeToggle.removeClass('toggling'), 300);
+      }
+      
+      // Initialize theme
+      applyTheme(currentTheme);
+      $themeToggle.on('click', toggleTheme);
+
+      // Simple Category Recommendations
+      const categoryRecommendations = {
+        educational: {
+          title: "Educational Content",
+          tip: "For learning new topics, start at 1× speed. For review, try 1.25-1.5× with captions.",
+          optimalSpeeds: ["1×", "1.25×", "1.5×"]
+        },
+        tutorial: {
+          title: "How-to Tutorials", 
+          tip: "Follow along at normal speed (1×). Only use faster speeds for quick review.",
+          optimalSpeeds: ["1×", "1.25×"]
+        },
+        documentary: {
+          title: "Documentary",
+          tip: "Most documentaries work well at 1.25-1.5× speed without losing comprehension.",
+          optimalSpeeds: ["1.25×", "1.5×", "1.75×"]
+        },
+        comedy: {
+          title: "� Comedy Content",
+          tip: "Comedy timing is crucial. Stick to 1× for best experience, 1.25× max.",
+          optimalSpeeds: ["1×", "1.25×"]
+        },
+        news: {
+          title: "News & Reports",
+          tip: "News can be consumed faster. 1.5-2× speeds work well for information gathering.",
+          optimalSpeeds: ["1.5×", "1.75×", "2×"]
+        },
+        music: {
+          title: "Music Videos",
+          tip: "Music should always be at normal speed (1×) to maintain audio quality.",
+          optimalSpeeds: ["1×"]
+        },
+        sports: {
+          title: "Sports Content",
+          tip: "Highlights can be faster, but key moments need normal speed for details.",
+          optimalSpeeds: ["1.25×", "1.5×"]
+        },
+        movies: {
+          title: "Movies & Shows",
+          tip: "Slight speed increase (1.1-1.25×) can save time without losing plot details.",
+          optimalSpeeds: ["1×", "1.1×", "1.25×"]
+        },
+        kids: {
+          title: "Kids Content",
+          tip: "Children's content should stay at normal speed for proper language development.",
+          optimalSpeeds: ["1×"]
+        },
+        language: {
+          title: "Language Learning",
+          tip: "Start slow (0.75×) for pronunciation, progress to 1× as you improve.",
+          optimalSpeeds: ["0.75×", "1×", "1.25×"]
+        },
+        podcast: {
+          title: "Podcasts",
+          tip: "Most people can comfortably listen to podcasts at 1.5-2× speed.",
+          optimalSpeeds: ["1.5×", "1.75×", "2×"]
+        },
+        asmr: {
+          title: "� ASMR/Meditation",
+          tip: "These are meant to be slow and relaxing. Always use normal or slower speed.",
+          optimalSpeeds: ["0.75×", "1×"]
+        }
+      };
+
+      // Format time helper function
+      function formatTime(totalSeconds) {
+        const absSeconds = Math.abs(totalSeconds);
+        const hours = Math.floor(absSeconds / 3600);
+        const minutes = Math.floor((absSeconds % 3600) / 60);
+        const seconds = Math.floor(absSeconds % 60);
+        
+        if (hours > 0) {
+          return `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        } else {
+          return `${minutes}:${String(seconds).padStart(2, '0')}`;
+        }
+      }
+
+      // Show category analysis
+      function showCategoryAnalysis() {
+        $('#detailsCard').removeClass('d-none');
+        $('#detailsCardMobile').removeClass('d-none');
+        updateSpeedSummary();
+      }
+
+      // Update speed summary
+      function updateSpeedSummary() {
+        const currentSpeed = $speed.val();
+        const hours = parseInt($hours.val()) || 0;
+        const minutes = parseInt($minutes.val()) || 0;
+        const seconds = parseInt($seconds.val()) || 0;
+        
+        if (hours === 0 && minutes === 0 && seconds === 0) return;
+        
+        const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+        const speedFloat = parseFloat(currentSpeed);
+        const adjustedSeconds = Math.round(totalSeconds / speedFloat);
+        
+        const timeSaved = totalSeconds - adjustedSeconds;
+        const timeSavedFormatted = formatTime(timeSaved);
+        const currentSpeedFormatted = speedFloat === 1 ? '1×' : `${speedFloat}×`;
+        
+        const summaryHtml = `
+          <div class="speed-summary">
+            <h4>Current Analysis</h4>
+            <div class="row">
+              <div class="col-6">
+                <div class="summary-stat">
+                  <div class="stat-value">${currentSpeedFormatted}</div>
+                  <div class="stat-label">Current Speed</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="summary-stat">
+                  <div class="stat-value">${timeSavedFormatted}</div>
+                  <div class="stat-label">Time ${timeSaved >= 0 ? 'Saved' : 'Added'}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        $('#speedSummary, #speedSummaryMobile').html(summaryHtml);
+      }
+
+      // Load speeds with AJAX
+      $.getJSON('speeds.json')
+        .done(function(data) {
+          $speed.empty();
+          data.forEach(item => {
+            $speed.append(`<option value="${item.value}">${item.label}</option>`);
+          });
+          $speed.val('1');
+          update();
+        })
+        .fail(function() {
+          // Fallback if speeds.json is not available
+          const defaultSpeeds = [
+            {value: '0.5', label: '0.5× Half Speed'},
+            {value: '0.75', label: '0.75× Slow'},
+            {value: '1', label: '1× Normal'},
+            {value: '1.25', label: '1.25× Faster'},
+            {value: '1.5', label: '1.5× Fast'},
+            {value: '1.75', label: '1.75× Very Fast'},
+            {value: '2', label: '2× Double Speed'},
+            {value: '2.5', label: '2.5× Ultra Fast'},
+            {value: '3', label: '3× Triple Speed'}
+          ];
+          
+          $speed.empty();
+          defaultSpeeds.forEach(item => {
+            $speed.append(`<option value="${item.value}">${item.label}</option>`);
+          });
+          $speed.val('1');
+          update();
+        });
+
+      // Input normalization
+      function normalize() {
+        let h = Math.max(0, parseInt($hours.val()) || 0);
+        let m = Math.max(0, parseInt($minutes.val()) || 0);
+        let s = Math.max(0, parseInt($seconds.val()) || 0);
+        
+        // Handle overflow
+        if (s >= 60) { m += Math.floor(s / 60); s = s % 60; }
+        if (m >= 60) { h += Math.floor(m / 60); m = m % 60; }
+        
+        $hours.val(h);
+        $minutes.val(m);
+        $seconds.val(s);
+        
+        return {h, m, s};
+      }
+
+      // Main update function
+      function update() {
+        const {h, m, s} = normalize();
+        const speed = parseFloat($speed.val()) || 1;
+        const totalSeconds = h * 3600 + m * 60 + s;
+        const adjustedSeconds = totalSeconds / speed;
+        
+        const ah = Math.floor(adjustedSeconds / 3600);
+        const am = Math.floor((adjustedSeconds % 3600) / 60);
+        const as = Math.floor(adjustedSeconds % 60);
+        
+        const display = `${String(ah).padStart(2,'0')}:${String(am).padStart(2,'0')}:${String(as).padStart(2,'0')}`;
+        $result.text(display);
+        
+        // Show time savings info with motivational messages
+        if (totalSeconds > 0 && speed !== 1) {
+          const timeSaved = totalSeconds - adjustedSeconds;
+          const percentSaved = ((timeSaved / totalSeconds) * 100).toFixed(1);
+          
+          let savedText = '';
+          let motivationalMsg = '';
+          
+          if (speed > 1) {
+            savedText = `Time saved: ${formatTime(timeSaved)} (${percentSaved}% faster)`;
+            
+            // Motivational messages based on time saved
+            if (timeSaved >= 3600) { // 1+ hour saved
+              motivationalMsg = 'Incredible! You saved over an hour - that\'s time for a whole new episode!';
+            } else if (timeSaved >= 1800) { // 30+ minutes saved
+              motivationalMsg = 'Amazing! You saved 30+ minutes - time for a coffee break or quick workout!';
+            } else if (timeSaved >= 600) { // 10+ minutes saved
+              motivationalMsg = 'Great! You saved 10+ minutes - every minute counts!';
+            } else if (timeSaved >= 300) { // 5+ minutes saved
+              motivationalMsg = 'Nice! You saved 5+ minutes - small gains add up!';
+            } else {
+              motivationalMsg = 'Every second matters - time is your most valuable resource!';
+            }
+          } else {
+            savedText = `Extended by: ${formatTime(Math.abs(timeSaved))} (${Math.abs(percentSaved)}% slower)`;
+            motivationalMsg = 'Sometimes slower is better for comprehension and retention!';
+          }
+          
+          $realTime.removeClass('d-none').html(`
+            <div class="time-saving-info">
+              <div class="saved-time">${savedText}</div>
+              <div class="motivation-msg">${motivationalMsg}</div>
+            </div>
+          `);
+          
+          // Add urgency animation to result
+          $result.addClass('calculating');
+          setTimeout(() => $result.removeClass('calculating'), 2000);
+        } else {
+          $realTime.addClass('d-none');
+          $result.removeClass('calculating');
+        }
+
+        // Update analysis
+        if (h > 0 || m > 0 || s > 0) {
+          showCategoryAnalysis();
+        } else {
+          $('#detailsCard, #detailsCardMobile').addClass('d-none');
+        }
+      }
+
+      // Event handlers
+      $('.time-input, #speed').on('input change', update);
+      
+      $reset.on('click', function() {
+        $hours.val(0);
+        $minutes.val(0);
+        $seconds.val(0);
+        $speed.val('1');
+        update();
+      });
+
+      // Category selection handler
+      $('#videoCategory, #videoCategoryMobile').on('change', function() {
+        const selectedCategory = $(this).val();
+        // Sync both selectors
+        $('#videoCategory, #videoCategoryMobile').val(selectedCategory);
+        
+        if (selectedCategory && categoryRecommendations[selectedCategory]) {
+          const category = categoryRecommendations[selectedCategory];
+          
+          const speedBadges = category.optimalSpeeds.map(speed => 
+            `<span class="badge bg-primary me-2 mb-2 p-2">${speed}</span>`
+          ).join('');
+
+          const detailsHtml = `
+            <div class="recommendation-card">
+              <div class="category-header">
+                <h4>${category.title}</h4>
+              </div>
+              <div class="recommendation-tip">
+                <p class="mb-3"><strong>💡 Tip:</strong> ${category.tip}</p>
+              </div>
+              <div class="optimal-speeds">
+                <h6 class="mb-2">⚡ Optimal Speeds:</h6>
+                <div class="speed-badges">
+                  ${speedBadges}
+                </div>
+              </div>
+              <div class="time-value-message mt-4">
+                <div class="alert alert-info">
+                  <strong>⏰ Remember:</strong> Time is valuable! Every minute saved can be used for more learning or relaxation.
+                </div>
+              </div>
+            </div>
+          `;
+
+          $('#categoryDetails, #categoryDetailsMobile').html(detailsHtml);
+        } else {
+          $('#categoryDetails, #categoryDetailsMobile').empty();
+        }
+      });
+
+      // Initial calculation
+      update();
+    });
+  </script>
+  
+  <!-- Bootstrap JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
